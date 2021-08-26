@@ -129,6 +129,17 @@ public class Recipe {
 
     public void setNotes(Notes notes) {
         this.notes = notes;
+
+        // Pro. tip: use setters for JPA bi-directional relationships
+        notes.setRecipe(this);
+
+    }
+
+    // JPA relationships
+    public Recipe addIngredient(Ingredient ingredient) {
+        ingredient.setRecipe(this);
+        this.ingredients.add(ingredient);
+        return this;
     }
 
     public Difficulty getDifficulty() {
