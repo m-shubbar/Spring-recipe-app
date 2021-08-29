@@ -4,9 +4,11 @@ import ca.shubbar.recipeapp.domain.*;
 import ca.shubbar.recipeapp.repositories.CategoryRepository;
 import ca.shubbar.recipeapp.repositories.RecipeRepository;
 import ca.shubbar.recipeapp.repositories.UnitOfMeasureRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ import java.util.Optional;
  * Created at 2021-08-25
  */
 
+@Slf4j
 @Component
 public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
@@ -37,8 +40,13 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
 
 
     @Override
+    // by doing this transactional annotation to create a transaction around this method
+    // This will prevent the "lazy initialization" exception
+    @Transactional
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         recipeRepository.saveAll(getRecipe());
+
+        log.debug("Loading bootstrap data... - mustafa - ");
     }
 
 

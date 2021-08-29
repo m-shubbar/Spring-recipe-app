@@ -1,11 +1,14 @@
 package ca.shubbar.recipeapp.domain;
 
+import lombok.*;
+
 import javax.persistence.*;
 
 /**
  * @author Mustafa <codingbox@outlook.com>
  * Created at 2021-08-24
  */
+@Data
 @Entity
 public class UnitOfMeasure {
 
@@ -13,21 +16,5 @@ public class UnitOfMeasure {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String description;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String uof) {
-        this.description = uof;
-    }
 
 }
