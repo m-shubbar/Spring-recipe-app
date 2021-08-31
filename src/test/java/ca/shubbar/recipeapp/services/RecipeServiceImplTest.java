@@ -1,5 +1,7 @@
 package ca.shubbar.recipeapp.services;
 
+import ca.shubbar.recipeapp.converters.RecipeCommandToRecipe;
+import ca.shubbar.recipeapp.converters.RecipeToRecipeCommand;
 import ca.shubbar.recipeapp.domain.Recipe;
 import ca.shubbar.recipeapp.repositories.RecipeRepository;
 import org.junit.Before;
@@ -22,11 +24,17 @@ public class RecipeServiceImplTest {
     @Mock
     RecipeRepository recipeRepository;
 
+    @Mock
+    RecipeToRecipeCommand recipeToRecipeCommand;
+
+    @Mock
+    RecipeCommandToRecipe recipeCommandToRecipe;
+
     @Before
-    public void setUp() throws Exception{
+    public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        recipeService = new RecipeServiceImpl(recipeRepository);
+        recipeService = new RecipeServiceImpl(recipeRepository, recipeCommandToRecipe, recipeToRecipeCommand);
     }
 
     @Test
@@ -36,6 +44,7 @@ public class RecipeServiceImplTest {
         Optional<Recipe> recipeOptional = Optional.of(recipe);
 
         when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+
         Recipe recipeReturned = recipeService.findById(1L);
 
         assertNotNull("Null recipe returned", recipeReturned);
@@ -44,22 +53,19 @@ public class RecipeServiceImplTest {
     }
 
     @Test
-    public void getRecipes() throws Exception{
+    public void getRecipesTest() throws Exception {
 
         Recipe recipe = new Recipe();
-        HashSet recipesData = new HashSet();
+        HashSet receipesData = new HashSet();
+        receipesData.add(recipe);
 
-        recipesData.add(recipe);
-
-
-        when(recipeRepository.findAll()).thenReturn(recipesData);
-
+        when(recipeService.getRecipes()).thenReturn(receipesData);
 
         Set<Recipe> recipes = recipeService.getRecipes();
 
         assertEquals(recipes.size(), 1);
-
         verify(recipeRepository, times(1)).findAll();
-
+        verify(recipeRepository, never()).findById(anyLong());
     }
+
 }
